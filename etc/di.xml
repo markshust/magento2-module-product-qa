@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="MarkShust\ProductQA\Api\Data\QuestionInterface" type="MarkShust\ProductQA\Model\Question"/>
+    <preference for="MarkShust\ProductQA\Api\Data\AnswerInterface" type="MarkShust\ProductQA\Model\Answer"/>
+    <preference for="MarkShust\ProductQA\Api\QuestionRepositoryInterface" type="MarkShust\ProductQA\Model\QuestionRepository"/>
+    <preference for="MarkShust\ProductQA\Api\AnswerRepositoryInterface" type="MarkShust\ProductQA\Model\AnswerRepository"/>
+    <preference for="MarkShust\ProductQA\Api\Data\QuestionSearchResultsInterface" type="MarkShust\ProductQA\Model\QuestionSearchResults"/>
+    <preference for="MarkShust\ProductQA\Api\Data\AnswerSearchResultsInterface" type="MarkShust\ProductQA\Model\AnswerSearchResults"/>
+
+    <!-- UI Component Data Providers -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="productqa_question_listing_data_source" xsi:type="string">MarkShust\ProductQA\Model\ResourceModel\Question\Grid\Collection</item>
+                <item name="productqa_answer_listing_data_source" xsi:type="string">MarkShust\ProductQA\Model\ResourceModel\Answer\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <virtualType name="MarkShust\ProductQA\Model\ResourceModel\Question\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">markshust_productqa_question</argument>
+            <argument name="resourceModel" xsi:type="string">MarkShust\ProductQA\Model\ResourceModel\Question</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MarkShust\ProductQA\Model\ResourceModel\Answer\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">markshust_productqa_answer</argument>
+            <argument name="resourceModel" xsi:type="string">MarkShust\ProductQA\Model\ResourceModel\Answer</argument>
+        </arguments>
+    </virtualType>
+</config>

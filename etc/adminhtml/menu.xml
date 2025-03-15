@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="MarkShust_ProductQA::productqa"
+             title="Product Q&amp;A"
+             module="MarkShust_ProductQA"
+             sortOrder="50"
+             parent="Magento_Catalog::catalog"
+             resource="MarkShust_ProductQA::productqa"/>
+
+        <add id="MarkShust_ProductQA::questions"
+             title="Questions"
+             module="MarkShust_ProductQA"
+             sortOrder="10"
+             parent="MarkShust_ProductQA::productqa"
+             action="productqa/question"
+             resource="MarkShust_ProductQA::questions"/>
+
+        <add id="MarkShust_ProductQA::answers"
+             title="Answers"
+             module="MarkShust_ProductQA"
+             sortOrder="20"
+             parent="MarkShust_ProductQA::productqa"
+             action="productqa/answer"
+             resource="MarkShust_ProductQA::answers"/>
+    </menu>
+</config>

@@ -1,0 +1,162 @@
+<?php
+/**
+ * Copyright © MarkShust. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+
+/** @var \MarkShust\ProductQA\Block\Product\View\Questions $block */
+/** @var \Magento\Framework\Escaper $escaper */
+?>
+<div class="product-qa">
+    <?php $questions = $block->getQuestions(); ?>
+
+    <?php if (count($questions)): ?>
+        <div class="product-qa-list">
+            <?php foreach ($questions as $question): ?>
+                <div class="qa-item">
+                    <div class="question">
+                        <strong><?= $escaper->escapeHtml(__('Q:')) ?></strong>
+                        <div class="question-content">
+                            <p><?= $escaper->escapeHtml($question->getQuestion()) ?></p>
+                            <small>
+                                <?= $escaper->escapeHtml(__('Asked by: %1', $question->getAuthorName())) ?>
+                                <time datetime="<?= $escaper->escapeHtmlAttr($question->getCreatedAt()) ?>">
+                                    <?= $escaper->escapeHtml(__('on %1', $block->formatDate($question->getCreatedAt(), \IntlDateFormatter::MEDIUM))) ?>
+                                </time>
+                            </small>
+                        </div>
+                    </div>
+
+                    <?php $answers = $block->getAnswers($question->getQuestionId()); ?>
+                    <?php if (count($answers)): ?>
+                        <div class="answers">
+                            <?php foreach ($answers as $answer): ?>
+                                <div class="answer">
+                                    <strong><?= $escaper->escapeHtml(__('A:')) ?></strong>
+                                    <div class="answer-content">
+                                        <p><?= $escaper->escapeHtml($answer->getAnswer()) ?></p>
+                                        <small>
+                                            <?= $escaper->escapeHtml(__('Answered by: %1', $answer->getAuthorName())) ?>
+                                            <time datetime="<?= $escaper->escapeHtmlAttr($answer->getCreatedAt()) ?>">
+                                                <?= $escaper->escapeHtml(__('on %1', $block->formatDate($answer->getCreatedAt(), \IntlDateFormatter::MEDIUM))) ?>
+                                            </time>
+                                        </small>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <div class="answer-form-container">
+                        <button type="button" class="action primary answer-toggle">
+                            <?= $escaper->escapeHtml(__('Add Answer')) ?>
+                        </button>
+
+                        <div class="answer-form" style="display: none;">
+                            <h4><?= $escaper->escapeHtml(__('Submit Your Answer')) ?></h4>
+                            <form action="<?= $escaper->escapeUrl($block->getAnswerFormAction($question->getQuestionId())) ?>" method="post" class="form" data-mage-init='{"validation":{}}'>
+                                <?= $block->getBlockHtml('formkey') ?>
+                                <input type="hidden" name="question_id" value="<?= $escaper->escapeHtmlAttr($question->getQuestionId()) ?>">
+
+                                <?php $customerData = $block->getCustomerData(); ?>
+
+                                <div class="field required">
+                                    <label for="author_name_<?= $escaper->escapeHtmlAttr($question->getQuestionId()) ?>" class="label">
+                                        <?= $escaper->escapeHtml(__('Name')) ?>
+                                    </label>
+                                    <div class="control">
+                                        <input type="text" name="author_name" id="author_name_<?= $escaper->escapeHtmlAttr($question->getQuestionId()) ?>"
+                                               value="<?= $escaper->escapeHtmlAttr($customerData['name']) ?>"
+                                               class="input-text" data-validate="{required:true}"/>
+                                    </div>
+                                </div>
+
+                                <div class="field required">
+                                    <label for="author_email_<?= $escaper->escapeHtmlAttr($question->getQuestionId()) ?>" class="label">
+                                        <?= $escaper->escapeHtml(__('Email')) ?>
+                                    </label>
+                                    <div class="control">
+                                        <input type="email" name="author_email" id="author_email_<?= $escaper->escapeHtmlAttr($question->getQuestionId()) ?>"
+                                               value="<?= $escaper->escapeHtmlAttr($customerData['email']) ?>"
+                                               class="input-text" data-validate="{required:true, 'validate-email':true}"/>
+                                    </div>
+                                </div>
+
+                                <div class="field required">
+                                    <label for="answer_<?= $escaper->escapeHtmlAttr($question->getQuestionId()) ?>" class="label">
+                                        <?= $escaper->escapeHtml(__('Your Answer')) ?>
+                                    </label>
+                                    <div class="control">
+                                        <textarea name="answer" id="answer_<?= $escaper->escapeHtmlAttr($question->getQuestionId()) ?>"
+                                                  class="input-text" rows="5" data-validate="{required:true}"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="actions-toolbar">
+                                    <div class="primary">
+                                        <button type="submit" class="action submit primary">
+                                            <span><?= $escaper->escapeHtml(__('Submit Answer')) ?></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    <?php else: ?>
+        <p class="no-questions"><?= $escaper->escapeHtml(__('There are no questions yet for this product. Be the first to ask a question!')) ?></p>
+    <?php endif; ?>
+
+    <div class="ask-question">
+        <h3><?= $escaper->escapeHtml(__('Ask a Question About This Product')) ?></h3>
+        <form action="<?= $escaper->escapeUrl($block->getFormAction()) ?>" method="post" class="form" data-mage-init='{"validation":{}}'>
+            <?= $block->getBlockHtml('formkey') ?>
+            <input type="hidden" name="product_id" value="<?= $escaper->escapeHtmlAttr($block->getProduct()->getId()) ?>">
+
+            <?php $customerData = $block->getCustomerData(); ?>
+
+            <div class="field required">
+                <label for="author_name" class="label"><?= $escaper->escapeHtml(__('Name')) ?></label>
+                <div class="control">
+                    <input type="text" name="author_name" id="author_name"
+                           value="<?= $escaper->escapeHtmlAttr($customerData['name']) ?>"
+                           class="input-text" data-validate="{required:true}"/>
+                </div>
+            </div>
+
+            <div class="field required">
+                <label for="author_email" class="label"><?= $escaper->escapeHtml(__('Email')) ?></label>
+                <div class="control">
+                    <input type="email" name="author_email" id="author_email"
+                           value="<?= $escaper->escapeHtmlAttr($customerData['email']) ?>"
+                           class="input-text" data-validate="{required:true, 'validate-email':true}"/>
+                </div>
+            </div>
+
+            <div class="field required">
+                <label for="question" class="label"><?= $escaper->escapeHtml(__('Your Question')) ?></label>
+                <div class="control">
+                    <textarea name="question" id="question" class="input-text" rows="5" data-validate="{required:true}"></textarea>
+                </div>
+            </div>
+
+            <div class="actions-toolbar">
+                <div class="primary">
+                    <button type="submit" class="action submit primary">
+                        <span><?= $escaper->escapeHtml(__('Submit Question')) ?></span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/x-magento-init">
+{
+    ".product-qa": {
+        "MarkShust_ProductQA/js/product-qa": {}
+    }
+}
+</script>
